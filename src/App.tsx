@@ -1,26 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react"
+import { createBoard } from "./helpers"
 
-function App() {
+const App = () => {
+  const [currentColorArrangement, setCurrentColorArrangement] = useState<string[]>([])
+
+  useEffect(() => {
+    setCurrentColorArrangement(createBoard())
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <main className="game-app">
+      <div className="game-board">
+        {currentColorArrangement.map((el, idx) => (
+          <span
+            key={idx}
+            style={{ backgroundColor: el }}
+          >{idx}</span>
+        ))}
+      </div>
+    </main>
+  )
 }
 
-export default App;
+export default App
