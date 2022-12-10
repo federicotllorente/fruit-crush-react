@@ -1,5 +1,6 @@
-import { DragEvent, useCallback, useEffect, useState } from "react"
-import { candyColors } from "./constants";
+import { useEffect, useState } from "react"
+import { BoardElement } from "./components"
+import { candyColors } from "./constants"
 import {
   createBoard,
   checkForColumnOfFour,
@@ -7,14 +8,11 @@ import {
   checkForRowOfFour,
   checkForRowOfThree,
   moveIntoSquareBelow,
-  wasMovedOnlyOnePosition,
-  getFruitData
-} from "./helpers"
+  useDragElement} from "./helpers"
 
 const App = () => {
   const [currentColorArrangement, setCurrentColorArrangement] = useState<string[]>([])
-  const [squareBeingDragged, setSquareBeingDragged] = useState<HTMLSpanElement | null>(null)
-  const [squareBeingReplaced, setSquareBeingReplaced] = useState<HTMLSpanElement | null>(null)
+  const [score, setScore] = useState<number>(0)
 
   useEffect(() => {
     setCurrentColorArrangement(createBoard())
@@ -55,86 +53,26 @@ const App = () => {
     currentColorArrangement
   ])
 
-  const handleDragStart = useCallback((e: DragEvent<HTMLSpanElement>) => {
-    setSquareBeingDragged(e.target as HTMLSpanElement)
-  }, [])
-
-  const handleDrop = useCallback((e: DragEvent<HTMLSpanElement>) => {
-    setSquareBeingReplaced(e.target as HTMLSpanElement)
-  }, [])
-
-  const handleDragEnd = useCallback(() => {
-    const newCurrentColorArrangement = currentColorArrangement
-
-    const squareBeingDraggedId = parseInt(squareBeingDragged?.getAttribute('data-id') ?? '')
-    const squareBeingReplacedId = parseInt(squareBeingReplaced?.getAttribute('data-id') ?? '')
-    
-    newCurrentColorArrangement[squareBeingReplacedId] = squareBeingDragged?.getAttribute('data-color') ?? ''
-    newCurrentColorArrangement[squareBeingDraggedId] = squareBeingReplaced?.getAttribute('data-color') ?? ''
-
-    const {
-      newCurrentColorArrangement: colorArrangementAfterCheckingForColumnOfFour,
-      wasUpdated: wasUpdatedAfterCheckingForColumnOfFour
-    } = checkForColumnOfFour([...newCurrentColorArrangement])
-    
-    const {
-      newCurrentColorArrangement: colorArrangementAfterCheckingForRowOfFour,
-      wasUpdated: wasUpdatedAfterCheckingForRowOfFour
-    } = checkForRowOfFour([...colorArrangementAfterCheckingForColumnOfFour])
-    
-    const {
-      newCurrentColorArrangement: colorArrangementAfterCheckingForColumnOfThree,
-      wasUpdated: wasUpdatedAfterCheckingForColumnOfThree
-    } = checkForColumnOfThree([...colorArrangementAfterCheckingForRowOfFour])
-    
-    const {
-      newCurrentColorArrangement: colorArrangementAfterCheckingForRowOfThree,
-      wasUpdated: wasUpdatedAfterCheckingForRowOfThree
-    } = checkForRowOfThree([...colorArrangementAfterCheckingForColumnOfThree])
-
-    const wasUpdated = wasUpdatedAfterCheckingForColumnOfFour || wasUpdatedAfterCheckingForRowOfFour || wasUpdatedAfterCheckingForColumnOfThree || wasUpdatedAfterCheckingForRowOfThree
-
-    if (squareBeingReplacedId && wasMovedOnlyOnePosition(squareBeingDraggedId, squareBeingReplacedId) && wasUpdated) {
-      setSquareBeingDragged(null)
-      setSquareBeingReplaced(null)
-    } else {
-      colorArrangementAfterCheckingForRowOfThree[squareBeingReplacedId] = squareBeingReplaced?.getAttribute('data-color') ?? ''
-      colorArrangementAfterCheckingForRowOfThree[squareBeingDraggedId] = squareBeingDragged?.getAttribute('data-color') ?? ''
-    }
-    
-    setCurrentColorArrangement([...colorArrangementAfterCheckingForRowOfThree])
-  }, [currentColorArrangement, squareBeingDragged, squareBeingReplaced])
+  const {
+    handleDragStart,
+    handleDrop,
+    handleDragEnd
+  } = useDragElement(currentColorArrangement, setCurrentColorArrangement, setScore)
 
   return (
     <main className="game-app">
+      <h1>Score: {score}</h1>
       <div className="game-board">
-        {currentColorArrangement.map((el, idx) => {
-          const fruitData = getFruitData(el as candyColors)
-          return (
-            <span
-              key={idx}
-              data-id={idx}
-              data-color={el}
-              // style={{ backgroundColor: el }}
-              draggable
-              onDragStart={handleDragStart}
-              onDragOver={(e: DragEvent<HTMLSpanElement>) => e.preventDefault()}
-              onDragEnter={(e: DragEvent<HTMLSpanElement>) => e.preventDefault()}
-              onDragLeave={(e: DragEvent<HTMLSpanElement>) => e.preventDefault()}
-              onDrop={handleDrop}
-              onDragEnd={handleDragEnd}
-            >
-              {fruitData.imageSrc && (
-                <img
-                  src={fruitData.imageSrc}
-                  alt={fruitData.imageAlt}
-                  width={50}
-                  // height={50}
-                />
-              )}
-            </span>
-          )
-        })}
+        {currentColorArrangement.map((color, idx) => (
+          <BoardElement
+            color={color as candyColors}
+            handleDragStart={handleDragStart}
+            handleDrop={handleDrop}
+            handleDragEnd={handleDragEnd}
+            key={idx}
+            data-id={idx}
+          />
+        ))}
       </div>
     </main>
   )

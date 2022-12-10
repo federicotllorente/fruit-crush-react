@@ -15,6 +15,8 @@ code {
   width: 100vw;
   height: 100vh;
   display: flex;
+  flex-direction: column;
+  gap: 50px;
   justify-content: center;
   align-items: center;
   background-color: #212121;
@@ -39,4 +41,14 @@ code {
   color: black;
   font-weight: bold;
   font-size: 22px;
+}
+
+.game-board span img {
+  pointer-events: none;
+  user-drag: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }

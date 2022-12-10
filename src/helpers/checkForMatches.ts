@@ -1,6 +1,9 @@
 import { width } from "../constants"
 
-export const checkForColumnOfThree = (currentColorArrangement: string[]): {
+export const checkForColumnOfThree = (
+  currentColorArrangement: string[],
+  setScore?: React.Dispatch<React.SetStateAction<number>>
+): {
   newCurrentColorArrangement: string[]
   wasUpdated: boolean
 } => {
@@ -12,6 +15,7 @@ export const checkForColumnOfThree = (currentColorArrangement: string[]): {
     const decidedColor = newCurrentColorArrangement[i]
 
     if (columnOfThree.every(square => newCurrentColorArrangement[square] === decidedColor)) {
+      setScore && setScore(v => v + 3)
       columnOfThree.forEach(square => newCurrentColorArrangement[square] = '')
       wasUpdated = true
     }
@@ -23,7 +27,10 @@ export const checkForColumnOfThree = (currentColorArrangement: string[]): {
   }
 }
 
-export const checkForColumnOfFour = (currentColorArrangement: string[]): {
+export const checkForColumnOfFour = (
+  currentColorArrangement: string[],
+  setScore?: React.Dispatch<React.SetStateAction<number>>
+): {
   newCurrentColorArrangement: string[]
   wasUpdated: boolean
 } => {
@@ -35,6 +42,7 @@ export const checkForColumnOfFour = (currentColorArrangement: string[]): {
     const decidedColor = newCurrentColorArrangement[i]
 
     if (columnOfFour.every(square => newCurrentColorArrangement[square] === decidedColor)) {
+      setScore && setScore(v => v + 4)
       columnOfFour.forEach(square => newCurrentColorArrangement[square] = '')
       wasUpdated = true
     }
@@ -46,7 +54,10 @@ export const checkForColumnOfFour = (currentColorArrangement: string[]): {
   }
 }
 
-export const checkForRowOfThree = (currentColorArrangement: string[]): {
+export const checkForRowOfThree = (
+  currentColorArrangement: string[],
+  setScore?: React.Dispatch<React.SetStateAction<number>>
+): {
   newCurrentColorArrangement: string[]
   wasUpdated: boolean
 } => {
@@ -60,6 +71,7 @@ export const checkForRowOfThree = (currentColorArrangement: string[]): {
     if (i % 8 === 6 || i % 8 === 7) continue
 
     if (rowOfThree.every(square => newCurrentColorArrangement[square] === decidedColor)) {
+      setScore && setScore(v => v + 3)
       rowOfThree.forEach(square => newCurrentColorArrangement[square] = '')
       wasUpdated = true
     }
@@ -71,7 +83,10 @@ export const checkForRowOfThree = (currentColorArrangement: string[]): {
   }
 }
 
-export const checkForRowOfFour = (currentColorArrangement: string[]): {
+export const checkForRowOfFour = (
+  currentColorArrangement: string[],
+  setScore?: React.Dispatch<React.SetStateAction<number>>
+): {
   newCurrentColorArrangement: string[]
   wasUpdated: boolean
 } => {
@@ -85,6 +100,7 @@ export const checkForRowOfFour = (currentColorArrangement: string[]): {
     if (i % 8 === 5 || i % 8 === 6 || i % 8 === 7) continue
 
     if (rowOfFour.every(square => newCurrentColorArrangement[square] === decidedColor)) {
+      setScore && setScore(v => v + 4)
       rowOfFour.forEach(square => newCurrentColorArrangement[square] = '')
       wasUpdated = true
     }

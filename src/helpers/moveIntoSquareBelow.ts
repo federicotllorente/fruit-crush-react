@@ -1,6 +1,6 @@
 import { candyColorsArray as candyColors, width } from "../constants"
 
-export const moveIntoSquareBelow = (currentColorArrangement: string[]) => {
+export const moveIntoSquareBelow = (currentColorArrangement: string[]): string[] => {
   const newCurrentColorArrangement = currentColorArrangement
 
   for (let i = 0; i < 56; i++) {
