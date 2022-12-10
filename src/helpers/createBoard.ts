@@ -1,4 +1,4 @@
-import { candyColors, width } from "../constants"
+import { candyColorsArray as candyColors, width } from "../constants"
 
 export const createBoard = () => {
   const randomColorArrangement = []
