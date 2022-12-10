@@ -24,6 +24,24 @@ code {
   font-family: 'Fira Code', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
+.game-app button {
+  padding: 10px 20px;
+  font-family: 'Fira Code', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-size: 18px;
+  background-color: #963232;
+  color: #f1f1f1;
+  border: 1px solid #4e1a1a;
+}
+
+.game-app button:hover {
+  cursor: pointer;
+  background-color: #4e1a1a;
+}
+
+.game-initialScreen {
+  text-align: center;
+}
+
 .game-board {
   max-width: 400px;
   display: grid;
